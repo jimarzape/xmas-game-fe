@@ -12,8 +12,20 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "@mui/material";
-
+import { Icon, Link, ListItemIcon } from "@mui/material";
+import {
+  LoginOutlined,
+  LogoutOutlined,
+  PeopleAltOutlined,
+  CategoryOutlined,
+  FamilyRestroomOutlined,
+} from "@mui/icons-material";
+import LoginModal from "./modals/login";
+import getCookie from "../utils/getCookie";
+import eraseCookie from "../utils/eraseCookie";
+import { useLogOutAuthMutation } from "../store/auth.slice";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 // const pages = ["Home", "Roulette", "Games", "Memories"];
 const pages = [
   { label: "Home", url: "/" },
@@ -23,12 +35,14 @@ const pages = [
 ];
 
 const settings = [
-  { label: "People", url: "/" },
-  { label: "Category", url: "" },
-  { label: "Family", url: "" },
+  { label: "People", url: "/", icon: PeopleAltOutlined },
+  { label: "Category", url: "", icon: CategoryOutlined },
+  { label: "Family", url: "", icon: FamilyRestroomOutlined },
 ];
 
-function Header() {
+const Header = () => {
+  const userCookie = getCookie("user");
+  const [reqLogout, resLogout] = useLogOutAuthMutation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -49,6 +63,35 @@ function Header() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const [openLogin, setOpenLogin] = React.useState(false);
+
+  const closeModal = () => {
+    setOpenLogin(false);
+  };
+
+  const logOut = () => {
+    // console.log("logout");
+    // eraseCookie("user");
+    const MySwal = withReactContent(Swal);
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You are about to logout.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Logout",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        reqLogout({})
+          .then((res) => {
+            Swal.fire("Logout!", "You are now logout.", "success");
+          })
+          .catch((e) => {});
+      }
+    });
   };
 
   return (
@@ -164,23 +207,55 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting.label} onClick={handleCloseUserMenu}>
-                  <Link
-                    textAlign="center"
-                    href={setting.url}
-                    underline="none"
-                    variant="inherit"
-                  >
-                    {setting.label}
+              {userCookie &&
+                userCookie != "" &&
+                settings.map((setting) => (
+                  <MenuItem key={setting.label} onClick={handleCloseUserMenu}>
+                    <ListItemIcon>
+                      <Icon component={setting.icon} />
+                    </ListItemIcon>
+                    <Link
+                      textAlign="center"
+                      href={setting.url}
+                      underline="none"
+                      variant="inherit"
+                    >
+                      {setting.label}
+                    </Link>
+                  </MenuItem>
+                ))}
+              {userCookie && (
+                <MenuItem key={"login-key"} onClick={logOut}>
+                  <ListItemIcon>
+                    <Icon component={LogoutOutlined} />
+                  </ListItemIcon>
+                  <Link textAlign="center" underline="none" variant="inherit">
+                    Logout
                   </Link>
                 </MenuItem>
-              ))}
+              )}
+
+              {!userCookie && userCookie == "" && (
+                <MenuItem
+                  key={"login-key"}
+                  onClick={() => {
+                    setOpenLogin(true);
+                  }}
+                >
+                  <ListItemIcon>
+                    <Icon component={LoginOutlined} />
+                  </ListItemIcon>
+                  <Link textAlign="center" underline="none" variant="inherit">
+                    Login
+                  </Link>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
+      {openLogin && <LoginModal isOpen={openLogin} onClose={closeModal} />}
     </AppBar>
   );
-}
+};
 export default Header;

@@ -18,7 +18,27 @@ export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     LoginAuth: builder.mutation({
       query: (data) => ({
-        url: "/user/auth/login",
+        url: "/user/login",
+        method: "POST",
+        credentials: "include",
+        withCredentials: true,
+        crossorigin: true,
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        body: data,
+      }),
+      async onQueryStarted(_id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(loginAuth({ ...data.data }));
+          localStorage.setItem("auth", JSON.stringify({ ...data.data }));
+        } catch (error) {
+          dispatch(appError(error));
+        }
+      },
+    }),
+    LogOutAuth: builder.mutation({
+      query: (data) => ({
+        url: "/user/logout",
         method: "POST",
         credentials: "include",
         withCredentials: true,
@@ -39,4 +59,4 @@ export const authApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginAuthMutation } = authApiSlice;
+export const { useLoginAuthMutation, useLogOutAuthMutation } = authApiSlice;

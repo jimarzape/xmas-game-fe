@@ -6,20 +6,8 @@ export const userSlice = createSlice({
   name: "users",
   initialState: {
     user: [],
-    userList: {},
-    currentUser: {},
-    UserPage: {
-      count: 0,
-      currentPage: 1,
-      lastPage: 1,
-      nextPage: null,
-      prevPage: null,
-    },
-    UserPgBtn: {
-      page: 1,
-      take: 50,
-      query: "",
-    },
+    userList: [],
+    currentUser: null,
   },
   reducers: {
     listUser: (state, { payload }) => ({ ...state, ...payload }),

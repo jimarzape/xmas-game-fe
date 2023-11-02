@@ -12,9 +12,21 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { Link } from "@mui/material";
 
-const pages = ["Home", "Roulette", "Ganes", "Memories"];
-const settings = ["People", "Category", "Family"];
+// const pages = ["Home", "Roulette", "Games", "Memories"];
+const pages = [
+  { label: "Home", url: "/" },
+  { label: "Roulette", url: "" },
+  { label: "Games", url: "" },
+  { label: "Memories", url: "" },
+];
+
+const settings = [
+  { label: "People", url: "/" },
+  { label: "Category", url: "" },
+  { label: "Family", url: "" },
+];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -92,8 +104,8 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page?.label} onClick={handleCloseNavMenu}>
+                  <Link href={page.url}>{page?.label}</Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -118,13 +130,14 @@ function Header() {
             ZAPE
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.map((page, key) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page?.label}
+                href={page?.url}
+                // onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
@@ -152,8 +165,15 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.label} onClick={handleCloseUserMenu}>
+                  <Link
+                    textAlign="center"
+                    href={setting.url}
+                    underline="none"
+                    variant="inherit"
+                  >
+                    {setting.label}
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

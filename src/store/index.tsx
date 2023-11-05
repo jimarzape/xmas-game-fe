@@ -3,12 +3,14 @@ import { apiSlice } from "./api.slice";
 import appReducer from "./app.slice";
 import authReducer from "./auth.slice";
 import userReducer from "./users.slice";
+import categoryReducer from "./category.slice";
 
 export const store = configureStore({
   reducer: {
     app: appReducer,
     auth: authReducer,
     users: userReducer,
+    category: categoryReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

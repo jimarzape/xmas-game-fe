@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Icon, Link, ListItemIcon } from "@mui/material";
+import { Icon, ListItemIcon } from "@mui/material";
 import {
   LoginOutlined,
   LogoutOutlined,
@@ -22,11 +22,10 @@ import {
 } from "@mui/icons-material";
 import LoginModal from "./modals/login";
 import getCookie from "../utils/getCookie";
-import eraseCookie from "../utils/eraseCookie";
 import { useLogOutAuthMutation } from "../store/auth.slice";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-// const pages = ["Home", "Roulette", "Games", "Memories"];
+import { Link } from "react-router-dom";
 const pages = [
   { label: "Home", url: "/" },
   { label: "Roulette", url: "" },
@@ -36,7 +35,7 @@ const pages = [
 
 const settings = [
   { label: "People", url: "/", icon: PeopleAltOutlined },
-  { label: "Category", url: "", icon: CategoryOutlined },
+  { label: "Category", url: "/category", icon: CategoryOutlined },
   { label: "Family", url: "", icon: FamilyRestroomOutlined },
 ];
 
@@ -148,7 +147,7 @@ const Header = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page?.label} onClick={handleCloseNavMenu}>
-                  <Link href={page.url}>{page?.label}</Link>
+                  <Link to={page.url}>{page?.label}</Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -214,14 +213,7 @@ const Header = () => {
                     <ListItemIcon>
                       <Icon component={setting.icon} />
                     </ListItemIcon>
-                    <Link
-                      textAlign="center"
-                      href={setting.url}
-                      underline="none"
-                      variant="inherit"
-                    >
-                      {setting.label}
-                    </Link>
+                    <Link to={setting.url}>{setting.label}</Link>
                   </MenuItem>
                 ))}
               {userCookie && (
@@ -229,9 +221,7 @@ const Header = () => {
                   <ListItemIcon>
                     <Icon component={LogoutOutlined} />
                   </ListItemIcon>
-                  <Link textAlign="center" underline="none" variant="inherit">
-                    Logout
-                  </Link>
+                  <Link to="">Logout</Link>
                 </MenuItem>
               )}
 
@@ -245,9 +235,7 @@ const Header = () => {
                   <ListItemIcon>
                     <Icon component={LoginOutlined} />
                   </ListItemIcon>
-                  <Link textAlign="center" underline="none" variant="inherit">
-                    Login
-                  </Link>
+                  <Link to="">Login</Link>
                 </MenuItem>
               )}
             </Menu>

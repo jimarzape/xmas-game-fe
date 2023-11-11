@@ -77,3 +77,17 @@ export interface PeopleEditInt {
   onClose: () => void;
   data: peopleDataInt;
 }
+
+export interface NamePIkcerParam {
+  names: string[];
+}
+
+export interface namePickData {
+  name: string;
+}
+
+export interface NamePIckSelected {
+  selectedName: string | null;
+  pickedNames: peopleDataInt | null;
+  hasWinner: boolean;
+}

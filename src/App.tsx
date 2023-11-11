@@ -7,6 +7,7 @@ import Header from "./pages/Header";
 import Category from "./pages/Category";
 import FamilyGroup from "./pages/Family";
 import People from "./pages/People";
+import Roulette from "./pages/Roulette";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/category" element={<Category />} />
             <Route path="/family-group" element={<FamilyGroup />} />
             <Route path="/people" element={<People />} />
+            <Route path="/roulette" element={<Roulette />} />
           </Routes>
         </Container>
       </BrowserRouter>

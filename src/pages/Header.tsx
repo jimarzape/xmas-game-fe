@@ -28,7 +28,7 @@ import withReactContent from "sweetalert2-react-content";
 import { Link } from "react-router-dom";
 const pages = [
   { label: "Home", url: "/" },
-  { label: "Roulette", url: "" },
+  { label: "Roulette", url: "/roulette" },
   { label: "Games", url: "" },
   { label: "Memories", url: "" },
 ];

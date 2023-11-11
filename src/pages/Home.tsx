@@ -15,7 +15,8 @@ const Home = () => {
   const textCollection = [
     "TODAY IS THE DAY",
     "OUR MOST ANTICIPATED EVENT EVERY YEAR",
-    `WELCOME TO ZAPE'S CHRISTMAS PARTY!!!`,
+    `WELCOME TO OUR ANNUAL CHRISTMAS PARTY!!!`,
+    `HOSTED BY ZAPE FAMILY`,
   ];
   const loopDelay = 2000; // Delay before restarting with the next text (adjust as needed)
   const [collectionIndex, setCollectionIndex] = useState(0);

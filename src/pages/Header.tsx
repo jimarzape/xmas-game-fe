@@ -34,9 +34,9 @@ const pages = [
 ];
 
 const settings = [
-  { label: "People", url: "/", icon: PeopleAltOutlined },
+  { label: "People", url: "/people", icon: PeopleAltOutlined },
   { label: "Category", url: "/category", icon: CategoryOutlined },
-  { label: "Family", url: "", icon: FamilyRestroomOutlined },
+  { label: "Family", url: "/family-group", icon: FamilyRestroomOutlined },
 ];
 
 const Header = () => {

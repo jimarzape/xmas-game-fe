@@ -73,7 +73,7 @@ const EditCategoryModal = (param: CatEditInt) => {
         open={isOpen}
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Create New Category
+          Edit Category
         </DialogTitle>
         <IconButton
           aria-label="close"

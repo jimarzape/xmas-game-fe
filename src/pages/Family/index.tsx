@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../assets/css/TextAnimation.css";
 import {
   Box,
   Container,
@@ -12,28 +11,28 @@ import {
   TableRow,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
-import AddCategoryModal from "./modals/category/Add";
-import {
-  useDeleteCategoryMutation,
-  useListCategoryMutation,
-} from "../store/category.slice";
 import { useSelector } from "react-redux";
-import EditCategoryModal from "./modals/category/Edit";
-import { CatDataInt } from "../interface";
+import { FamDataInt } from "../../interface";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import {
+  useDeleteFamilyMutation,
+  useListFamilyMutation,
+} from "../../store/family.slice";
+import AddFamilyModal from "./modals/Add";
+import EditFamilyModal from "./modals/Edit";
 
-const Category = () => {
+const FamilyGroup = () => {
   const [dense, setDense] = React.useState(true);
   const [isOpenAdd, setIsOpenADD] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
-  const [reqList, resList] = useListCategoryMutation();
+  const [reqList, resList] = useListFamilyMutation();
   const { categorylist } = useSelector((state: any) => state.category);
-  const [categoryData, setCategoryData] = useState<CatDataInt>({
+  const [familyData, setFamilyData] = useState<FamDataInt>({
     name: "",
     id: 0,
   });
-  const [reqDel, resDel] = useDeleteCategoryMutation();
+  const [reqDel, resDel] = useDeleteFamilyMutation();
 
   const closeAdd = () => {
     setIsOpenADD(false);
@@ -44,7 +43,7 @@ const Category = () => {
   };
 
   const editCat = (data: any) => {
-    setCategoryData({
+    setFamilyData({
       name: data?.name,
       id: Number(data?.id),
     });
@@ -89,7 +88,7 @@ const Category = () => {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell>Category</TableCell>
+                  <TableCell>Family</TableCell>
                   <TableCell align="right">
                     <IconButton
                       aria-label="Add Category"
@@ -127,16 +126,16 @@ const Category = () => {
           </TableContainer>
         </Paper>
       </Box>
-      {isOpenAdd && <AddCategoryModal isOpen={isOpenAdd} onClose={closeAdd} />}
+      {isOpenAdd && <AddFamilyModal isOpen={isOpenAdd} onClose={closeAdd} />}
       {isOpenEdit && (
-        <EditCategoryModal
+        <EditFamilyModal
           isOpen={isOpenEdit}
           onClose={closeEdit}
-          data={categoryData}
+          data={familyData}
         />
       )}
     </Container>
   );
 };
 
-export default Category;
+export default FamilyGroup;

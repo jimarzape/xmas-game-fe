@@ -4,6 +4,8 @@ import appReducer from "./app.slice";
 import authReducer from "./auth.slice";
 import userReducer from "./users.slice";
 import categoryReducer from "./category.slice";
+import familyReducer from "./family.slice";
+import peopleReducer from "./people.slice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
     auth: authReducer,
     users: userReducer,
     category: categoryReducer,
+    family: familyReducer,
+    people: peopleReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

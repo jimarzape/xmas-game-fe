@@ -12,7 +12,18 @@ export interface CatDataInt {
   name: string;
   id: number;
 }
+
 export interface CatEditInt {
+  isOpen: boolean;
+  onClose: () => void;
+  data: CatDataInt;
+}
+
+export interface FamDataInt {
+  name: string;
+  id: number;
+}
+export interface FamEditInt {
   isOpen: boolean;
   onClose: () => void;
   data: CatDataInt;
@@ -38,4 +49,31 @@ export interface HeadCell {
 
 export interface EnhancedTableToolbarProps {
   numSelected: number;
+}
+
+export interface familyDataInt {
+  id: number;
+  name: string;
+}
+
+export interface categoryDataInt {
+  id: number;
+  name: string;
+}
+
+export interface peopleDataInt {
+  id: number;
+  first_name: string;
+  last_name: string;
+  family: familyDataInt | null;
+  category: categoryDataInt | null;
+  gender: string;
+  age: number;
+  avatar: string;
+}
+
+export interface PeopleEditInt {
+  isOpen: boolean;
+  onClose: () => void;
+  data: peopleDataInt;
 }

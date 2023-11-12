@@ -5,6 +5,7 @@ import {
   IconButton,
   Paper,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -27,7 +28,7 @@ const FamilyGroup = () => {
   const [isOpenAdd, setIsOpenADD] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [reqList, resList] = useListFamilyMutation();
-  const { categorylist } = useSelector((state: any) => state.category);
+  const { familyList } = useSelector((state: any) => state.family);
   const [familyData, setFamilyData] = useState<FamDataInt>({
     name: "",
     id: 0,
@@ -99,29 +100,31 @@ const FamilyGroup = () => {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              {categorylist?.map((item: any) => {
-                return (
-                  <TableRow key={item?.id}>
-                    <TableCell>{item?.name}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        aria-label="delete"
-                        onClick={() => delCat(item)}
-                      >
-                        <Delete fontSize="inherit" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        aria-label="edit"
-                        onClick={() => editCat(item)}
-                      >
-                        <Edit fontSize="inherit" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              <TableBody>
+                {familyList?.map((item: FamDataInt) => {
+                  return (
+                    <TableRow key={item?.id}>
+                      <TableCell>{item?.name}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          size="small"
+                          aria-label="delete"
+                          onClick={() => delCat(item)}
+                        >
+                          <Delete fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          aria-label="edit"
+                          onClick={() => editCat(item)}
+                        >
+                          <Edit fontSize="inherit" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
             </Table>
           </TableContainer>
         </Paper>

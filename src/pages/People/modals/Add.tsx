@@ -67,6 +67,8 @@ const AddPeopleModal = (param: ModalInt) => {
   const { categorylist } = useSelector((state: any) => state.category);
   const [profileSrc, setProfileSrc] = React.useState<string | null>(Profile);
 
+  const { peopleBtnPage } = useSelector((state: any) => state.people);
+
   const convertToBase64 = (
     file: File,
     callback: (result: string | null) => void
@@ -133,7 +135,7 @@ const AddPeopleModal = (param: ModalInt) => {
 
   React.useEffect(() => {
     if (resCreate.isSuccess) {
-      reqList({});
+      reqList(peopleBtnPage);
       onClose();
     }
   }, [resCreate.isSuccess]);

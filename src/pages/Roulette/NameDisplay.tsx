@@ -10,7 +10,7 @@ const NameDisplay = ({
   return (
     <div>
       <Typography variant="h3" gutterBottom>
-        {pickedNames?.first_name} {pickedNames?.last_name}
+        {pickedNames?.first_name}
       </Typography>
       {hasWinner && (
         <Typography variant="h5" gutterBottom>

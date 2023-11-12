@@ -2,21 +2,37 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
+  FormControl,
+  Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Pagination,
   Paper,
+  Select,
+  SelectChangeEvent,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { PeopleEditInt, peopleDataInt } from "../../interface";
 import {
+  PeopleEditInt,
+  categoryDataInt,
+  familyDataInt,
+  peopleDataInt,
+} from "../../interface";
+import {
+  peoples,
   useDeletePeopleMutation,
   useListPeopleMutation,
 } from "../../store/people.slice";
@@ -24,15 +40,22 @@ import AddPeopleModal from "./modals/Add";
 import { useListFamilyMutation } from "../../store/family.slice";
 import { useListCategoryMutation } from "../../store/category.slice";
 import EditPeopleModal from "./modals/Edit";
+import calculatePageCount from "../../utils/calculatePageCount";
 
 const People = () => {
+  const disptach = useDispatch();
   const [dense, setDense] = React.useState(true);
   const [isOpenAdd, setIsOpenADD] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [reqList, resList] = useListPeopleMutation();
   const [reqFamList, resFamList] = useListFamilyMutation();
   const [reqCategoryList, resCategoryList] = useListCategoryMutation();
-  const { peopleList } = useSelector((state: any) => state.people);
+  const { peopleList, peoplePage, peopleBtnPage } = useSelector(
+    (state: any) => state.people
+  );
+  const { categorylist } = useSelector((state: any) => state.category);
+  const { familyList } = useSelector((state: any) => state.family);
+
   const [peopleData, setPeopleData] = useState<peopleDataInt>({
     id: 0,
     first_name: "",
@@ -71,13 +94,13 @@ const People = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         reqDel({ id: data?.id })
-          .then((res) => {
+          .then(async (res) => {
             Swal.fire(
               "Deleted!",
               `${data?.first_name} ${data?.last_name} has been deleted.`,
               "success"
             );
-            reqList({});
+            await submitApi(peopleBtnPage);
           })
           .catch((e) => {});
       }
@@ -86,17 +109,122 @@ const People = () => {
 
   useEffect(() => {
     const load = async () => {
-      await reqList({});
+      await submitApi(peopleBtnPage);
       await reqFamList({});
       await reqCategoryList({});
     };
     load();
   }, []);
 
+  const handlePageChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    // setCurrentPage(value);
+    const param = {
+      ...peopleBtnPage,
+      page: value,
+    };
+    await submitApi(param);
+  };
+
+  const handleFamilyChange = async (id: number) => {
+    const param = {
+      ...peopleBtnPage,
+      family_id: id,
+    };
+    await submitApi(param);
+  };
+
+  const handleCategoryChange = async (id: number) => {
+    const param = {
+      ...peopleBtnPage,
+      category_id: id,
+    };
+    await submitApi(param);
+  };
+
+  const handleGenderChange = async (value: string) => {
+    const param = {
+      ...peopleBtnPage,
+      gender: value,
+    };
+    await submitApi(param);
+  };
+
+  const submitApi = async (param: any) => {
+    await disptach(peoples({ peopleBtnPage: param }));
+    reqList(param);
+  };
+
   return (
     <Container>
       <Box width="100%" mt="50px">
-        <Box width="100%"></Box>
+        <Box width="100%" mb="32px">
+          <Grid container spacing={2}>
+            <Grid item xs={3}>
+              {/* <TextField
+                label="Search"
+                type="search"
+                id="search"
+                name="search"
+              /> */}
+            </Grid>
+            <Grid item xs={3}>
+              <FormControl fullWidth>
+                <InputLabel id="family-select">Family Group</InputLabel>
+                <Select
+                  labelId="family-select"
+                  id="family_id"
+                  name="family_id"
+                  onChange={(e: SelectChangeEvent) => {
+                    handleFamilyChange(Number(e.target.value));
+                  }}
+                >
+                  <MenuItem value="0">All</MenuItem>
+                  {familyList?.map((item: familyDataInt) => {
+                    return <MenuItem value={item.id}>{item.name}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={3}>
+              <FormControl fullWidth>
+                <InputLabel id="category-select">Category Group</InputLabel>
+                <Select
+                  labelId="category-select"
+                  id="category_id"
+                  name="category_id"
+                  onChange={(e: SelectChangeEvent) => {
+                    handleCategoryChange(Number(e.target.value));
+                  }}
+                >
+                  <MenuItem value="0">All</MenuItem>
+                  {categorylist?.map((item: categoryDataInt) => {
+                    return <MenuItem value={item.id}>{item.name}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={3}>
+              <FormControl fullWidth>
+                <InputLabel id="gender-select">Gender</InputLabel>
+                <Select
+                  labelId="gender-select"
+                  id="gender"
+                  name="gender"
+                  onChange={(e: SelectChangeEvent) => {
+                    handleGenderChange(e.target.value);
+                  }}
+                >
+                  <MenuItem value="">All</MenuItem>
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Box>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <TableContainer>
             <Table
@@ -120,49 +248,60 @@ const People = () => {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              {peopleList?.map((item: peopleDataInt) => {
-                return (
-                  <TableRow key={item?.id}>
-                    <TableCell padding="none" align="center">
-                      <img
-                        src={item?.avatar}
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "contain",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography>
-                        {item?.first_name} {item?.last_name}
-                      </Typography>
-                      <Typography>
-                        {item?.age} - {item?.gender}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{item?.family?.name}</TableCell>
-                    <TableCell>{item?.category?.name}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        aria-label="delete"
-                        onClick={() => delCat(item)}
-                      >
-                        <Delete fontSize="inherit" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        aria-label="edit"
-                        onClick={() => editCat(item)}
-                      >
-                        <Edit fontSize="inherit" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              <TableBody>
+                {peopleList?.map((item: peopleDataInt) => {
+                  return (
+                    <TableRow key={item?.id}>
+                      <TableCell padding="none" align="center">
+                        <img
+                          src={item?.avatar}
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography>
+                          {item?.first_name} {item?.last_name}
+                        </Typography>
+                        <Typography>
+                          {item?.age} - {item?.gender}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{item?.family?.name}</TableCell>
+                      <TableCell>{item?.category?.name}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          size="small"
+                          aria-label="delete"
+                          onClick={() => delCat(item)}
+                        >
+                          <Delete fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          aria-label="edit"
+                          onClick={() => editCat(item)}
+                        >
+                          <Edit fontSize="inherit" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
             </Table>
+
+            <Pagination
+              count={calculatePageCount(
+                Number(peoplePage.count),
+                Number(peopleBtnPage.take)
+              )}
+              page={peoplePage.currentPage}
+              onChange={handlePageChange}
+            />
           </TableContainer>
         </Paper>
       </Box>

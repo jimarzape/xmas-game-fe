@@ -5,6 +5,7 @@ import {
   IconButton,
   Paper,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -99,29 +100,31 @@ const Category = () => {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              {categorylist?.map((item: any) => {
-                return (
-                  <TableRow key={item?.id}>
-                    <TableCell>{item?.name}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        aria-label="delete"
-                        onClick={() => delCat(item)}
-                      >
-                        <Delete fontSize="inherit" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        aria-label="edit"
-                        onClick={() => editCat(item)}
-                      >
-                        <Edit fontSize="inherit" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              <TableBody>
+                {categorylist?.map((item: any) => {
+                  return (
+                    <TableRow key={item?.id}>
+                      <TableCell>{item?.name}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          size="small"
+                          aria-label="delete"
+                          onClick={() => delCat(item)}
+                        >
+                          <Delete fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          aria-label="edit"
+                          onClick={() => editCat(item)}
+                        >
+                          <Edit fontSize="inherit" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
             </Table>
           </TableContainer>
         </Paper>

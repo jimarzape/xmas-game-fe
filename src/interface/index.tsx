@@ -70,6 +70,8 @@ export interface peopleDataInt {
   gender: string;
   age: number;
   avatar: string;
+  isHbd?: boolean;
+  isWon?: boolean;
 }
 
 export interface PeopleEditInt {

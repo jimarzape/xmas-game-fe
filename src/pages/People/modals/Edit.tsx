@@ -69,6 +69,7 @@ const EditPeopleModal = (param: PeopleEditInt) => {
   const [profileSrc, setProfileSrc] = React.useState<string | null>(
     data.avatar
   );
+  const { peopleBtnPage } = useSelector((state: any) => state.people);
 
   const convertToBase64 = (
     file: File,
@@ -121,7 +122,7 @@ const EditPeopleModal = (param: PeopleEditInt) => {
 
   React.useEffect(() => {
     if (resUpdate.isSuccess) {
-      reqList({});
+      reqList(peopleBtnPage);
       onClose();
     }
   }, [resUpdate.isSuccess]);

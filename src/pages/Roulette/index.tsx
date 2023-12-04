@@ -73,6 +73,18 @@ const Roulette = () => {
     await load(param);
   };
 
+  const handleGenderChange = async (gender: string) => {
+    const param = {
+      ...peopleBtnPage,
+      gender: gender != "All" ? gender : "",
+      take: 100,
+    };
+
+    await disptach(peoples({ peopleBtnPage: param }));
+    // setPeopleParam(param);
+    await load(param);
+  };
+
   const setDefProfile = () => {
     if (rouletteProfile) {
       fetch(rouletteProfile)
@@ -166,7 +178,7 @@ const Roulette = () => {
   };
 
   return (
-    <Box width="100%">
+    <Container style={{ width: "70%", margin: "auto" }}>
       <Grid container spacing={2} mt="32px">
         <Grid item xs={3}>
           <FormControl fullWidth>
@@ -190,7 +202,24 @@ const Roulette = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={6}></Grid>
+        <Grid item xs={3}>
+          <FormControl fullWidth>
+            <InputLabel id="category-select">Gender</InputLabel>
+            <Select
+              labelId="gender-select"
+              id="gender"
+              name="gender"
+              onChange={(e: SelectChangeEvent) => {
+                handleGenderChange(e.target.value);
+              }}
+            >
+              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={3}></Grid>
         <Grid item xs={3} textAlign="right">
           <Typography>Available participants : {participant.length}</Typography>
         </Grid>
@@ -236,7 +265,7 @@ const Roulette = () => {
           </Button>
         </Box>
       </Container>
-    </Box>
+    </Container>
   );
 };
 

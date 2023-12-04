@@ -78,7 +78,7 @@ const Category = () => {
   }, []);
 
   return (
-    <Container>
+    <Container style={{ width: "80%", margin: "auto", marginBottom: "5em" }}>
       <Box width="100%" mt="50px">
         <Paper sx={{ width: "100%", mb: 2 }}>
           <TableContainer>

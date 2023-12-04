@@ -158,7 +158,7 @@ const People = () => {
   };
 
   return (
-    <Container>
+    <Container style={{ width: "80%", margin: "auto", marginBottom: "5em" }}>
       <Box width="100%" mt="50px">
         <Box width="100%" mb="32px">
           <Grid container spacing={2}>

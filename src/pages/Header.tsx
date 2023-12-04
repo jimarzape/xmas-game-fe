@@ -29,7 +29,7 @@ import { Link } from "react-router-dom";
 const pages = [
   { label: "Home", url: "/" },
   { label: "Roulette", url: "/roulette" },
-  { label: "Games", url: "" },
+  { label: "Games", url: "/games" },
   { label: "Memories", url: "" },
 ];
 
@@ -94,7 +94,7 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ background: "#004d00" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />

@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "../assets/css/TextAnimation.css";
-import { Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
+import Snowfall from "react-snowfall";
+import background from "../assets/images/wall-papper-2.jpg";
+import "../assets/css/nomax.css";
 
 const Home = () => {
+  const jingle = require("../assets/sounds/jingle-bells-2.mp3") as string;
+
+  const jingleAudio = new Audio(jingle);
+  jingleAudio.loop = true;
+
   const [text, setText] = useState("");
   const [index, setIndex] = useState(0);
   const [backspace, setBackspace] = useState(false);
+  const [playJingle, setPlay] = useState(false);
   const [showCursor, setShowCursor] = useState(true); // State to control cursor blinking
   const speed = 75;
   const originalText = "WELCOME TO ZAPE CHRISTMAS PARTY!!!";
@@ -70,19 +79,41 @@ const Home = () => {
     };
   }, [text, index, backspace, collectionIndex]);
 
+  useEffect(() => {
+    // jingleAudio.play();
+  }, []);
+
+  const playSound = () => {
+    jingleAudio.play();
+    setPlay(true);
+  };
+
   return (
     <Container
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "90vh",
+        textAlign: "left",
+        height: "92.8vh",
+        backgroundImage: `url(${background})`,
+        width: "100%",
+        backgroundPosition: "center",
+        padding: "5em",
       }}
     >
-      <Typography id="demo" variant="h2">
-        {text}
-        {showCursor ? cursor : ""}
-      </Typography>
+      <Snowfall />
+
+      <Container style={{ position: "fixed", top: "30%", left: "5%" }}>
+        <Typography variant="h1" color="#ffe7e7">
+          Merry Christmas!!!
+        </Typography>
+        <Typography variant="h3" color="#ffe7e7">
+          From Zape family
+        </Typography>
+        {!playJingle && (
+          <Button variant="contained" onClick={playSound}>
+            Play
+          </Button>
+        )}
+      </Container>
     </Container>
   );
 };

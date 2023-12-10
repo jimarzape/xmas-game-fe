@@ -16,12 +16,12 @@ const BingoSource = () => {
     },
     {
       id: 3,
-      title: "Diagonal Right",
+      title: "Full Card",
       imageUrl: FullCard,
     },
     {
       id: 4,
-      title: "Diagonal Right",
+      title: "Horizontal",
       imageUrl: HorizontalCard,
     },
     // Add more items as needed

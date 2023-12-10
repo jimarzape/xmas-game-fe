@@ -1,7 +1,16 @@
 import { useParams } from "react-router-dom";
 import BingoSource from "./source";
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
+import BingoBg from "../../../assets/images/bingo/bingo-bg.jpg";
 
 interface BingoNumbers {
   B: number[];
@@ -49,9 +58,21 @@ const BingoPlay = () => {
   });
   const [displayNumber, setDisplayNumber] = useState<any | null>(null);
 
+  const BingoColor = {
+    B: { background: "#008000", color: "#ffecec" },
+    I: { background: "#b70303", color: "#ffecec" },
+    N: { background: "#b1b703", color: "#ffecec" },
+    G: { background: "#b70395", color: "#ffecec" },
+    O: { background: "#000000", color: "#ffecec" },
+  } as any;
+
+  useEffect(() => {}, [selectedNumbers]);
+
   useEffect(() => {
-    console.log("selectedNumbers", selectedNumbers);
-  }, [selectedNumbers]);
+    const saveSelected = localStorage.getItem("selectedNumbers") as string;
+    const parse = JSON.parse(saveSelected) as BingoNumbers;
+    setSelectedNumbers(parse);
+  }, []);
 
   const selectRandomNumber = () => {
     tickAudio.play();
@@ -90,10 +111,13 @@ const BingoPlay = () => {
       congratsAudio.play();
 
       const { key, num } = remainingNumbers[finalIndex];
-      setSelectedNumbers({
+
+      const selected = {
         ...selectedNumbers,
         [key]: [...selectedNumbers[key as keyof BingoNumbers], num],
-      }); // Store the selected number under its key
+      };
+      setSelectedNumbers(selected); // Store the selected number under its key
+      localStorage.setItem("selectedNumbers", JSON.stringify(selected));
       setDisplayNumber(`${key}-${num}`); // Display the final picked number with its index letter
     }, playDuration); // Total time for picking
 
@@ -109,41 +133,104 @@ const BingoPlay = () => {
     >
       <Grid container spacing={2}>
         <Grid item xs={6} md={6}>
-          <Container
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "92vh",
-              background: "red",
-            }}
-          >
-            <Paper
-              elevation={3}
+          <Container style={{ height: "92vh" }}>
+            <Container
               style={{
-                padding: "16px",
-                textAlign: "center",
-                height: "300px",
-                width: "250px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "5em",
               }}
             >
-              <img
-                src={sourceData?.imageUrl}
-                alt={sourceData?.title}
+              <Paper
+                elevation={3}
                 style={{
-                  width: "200px",
-                  height: "200px",
-                  objectFit: "contain",
-                  margin: "auto",
+                  padding: "16px",
+                  textAlign: "center",
+                  height: "300px",
+                  width: "250px",
                 }}
-              />
-              <Typography
-                variant="h6"
-                style={{ marginBottom: "8px", margin: "auto" }}
               >
-                {sourceData?.title}
-              </Typography>
-            </Paper>
+                <img
+                  src={sourceData?.imageUrl}
+                  alt={sourceData?.title}
+                  style={{
+                    width: "200px",
+                    height: "200px",
+                    objectFit: "contain",
+                    margin: "auto",
+                  }}
+                />
+                <Typography
+                  variant="h6"
+                  style={{ marginBottom: "8px", margin: "auto" }}
+                >
+                  {sourceData?.title}
+                </Typography>
+              </Paper>
+            </Container>
+            <Container>
+              {Object.keys(selectedNumbers).map((item: any, key: any) => {
+                return (
+                  <Box key={`${key}-bingo`}>
+                    <Grid container spacing={2} rowGap={20}>
+                      <Grid item xs={2}>
+                        <Box
+                          style={{
+                            background: `${BingoColor[item].background}`,
+                            color: `${BingoColor[item].color}`,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "3em",
+                            height: "3em",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          {item}
+                        </Box>
+                      </Grid>
+                      <Grid item xs={10} style={{ display: "flex" }}>
+                        {selectedNumbers[item as keyof BingoNumbers].map(
+                          (num: any) => {
+                            return (
+                              <Box
+                                style={{
+                                  background: `${BingoColor[item].background}`,
+                                  // color: `${BingoColor[item].color}`,
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  width: "3em",
+                                  height: "3em",
+                                  borderRadius: "50%",
+                                  marginRight: "5px",
+                                }}
+                              >
+                                <Box
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    width: "2em",
+                                    height: "2em",
+                                    borderRadius: "50%",
+                                    background: "white",
+                                  }}
+                                >
+                                  {num}
+                                </Box>
+                              </Box>
+                            );
+                          }
+                        )}
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                  </Box>
+                );
+              })}
+            </Container>
           </Container>
         </Grid>
         <Grid item xs={6} md={6}>
@@ -154,7 +241,10 @@ const BingoPlay = () => {
               alignItems: "center",
               height: "92vh",
               padding: "5em",
-              background: "green",
+              backgroundImage: `URL(${BingoBg})`,
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
             }}
           >
             <Box>

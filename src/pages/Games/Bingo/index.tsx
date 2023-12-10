@@ -18,6 +18,14 @@ import { useNavigate } from "react-router-dom";
 const BingoCard = () => {
   const navigate = useNavigate();
   function handlePlayClick(id: any) {
+    const def = {
+      B: [],
+      I: [],
+      N: [],
+      G: [],
+      O: [],
+    };
+    localStorage.setItem("selectedNumbers", JSON.stringify(def));
     navigate(`/games/bingo/${id}`);
   }
   const items = BingoSource();

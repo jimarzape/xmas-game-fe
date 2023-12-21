@@ -6,6 +6,7 @@ import userReducer from "./users.slice";
 import categoryReducer from "./category.slice";
 import familyReducer from "./family.slice";
 import peopleReducer from "./people.slice";
+import gemeReducer from "./game.slice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     category: categoryReducer,
     family: familyReducer,
     people: peopleReducer,
+    games: gemeReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

@@ -19,6 +19,7 @@ import {
   PeopleAltOutlined,
   CategoryOutlined,
   FamilyRestroomOutlined,
+  Gamepad,
 } from "@mui/icons-material";
 import LoginModal from "./modals/login";
 import getCookie from "../utils/getCookie";
@@ -34,9 +35,18 @@ const pages = [
 ];
 
 const settings = [
-  { label: "People", url: "/people", icon: PeopleAltOutlined },
-  { label: "Category", url: "/category", icon: CategoryOutlined },
-  { label: "Family", url: "/family-group", icon: FamilyRestroomOutlined },
+  { label: "People", url: "/settings/people", icon: PeopleAltOutlined },
+  { label: "Category", url: "/settings/category", icon: CategoryOutlined },
+  {
+    label: "Family",
+    url: "/settings/family-group",
+    icon: FamilyRestroomOutlined,
+  },
+  {
+    label: "Game",
+    url: "/settings/games",
+    icon: Gamepad,
+  },
 ];
 
 const Header = () => {

@@ -92,11 +92,16 @@ const Home = () => {
     <Container
       style={{
         textAlign: "left",
-        height: "92.8vh",
+        // height: "92.8vh",
         backgroundImage: `url(${background})`,
         width: "100%",
         backgroundPosition: "center",
         padding: "5em",
+        position: "absolute",
+        top: "4.25em",
+        bottom: 0,
+        right: 0,
+        left: 0,
       }}
     >
       <Snowfall />

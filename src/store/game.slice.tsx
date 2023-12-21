@@ -2,40 +2,26 @@ import { createSlice } from "@reduxjs/toolkit";
 import { apiSlice } from "./api.slice";
 import { appError } from "./app.slice";
 
-export const peopleSlice = createSlice({
-  name: "people",
+export const gameSlice = createSlice({
+  name: "games",
   initialState: {
-    peopleList: [],
-    peoplePage: {
-      count: 0,
-      currentPage: 1,
-      lastPage: 1,
-      nextPage: null,
-      prevPage: null,
-    },
-    peopleBtnPage: {
-      page: 1,
-      take: 20,
-      query: "",
-      category_id: 0,
-      family_id: 0,
-      gender: "",
-    },
+    gamelist: [],
+    gameData: null,
   },
   reducers: {
-    peoples: (state, { payload }) => ({ ...state, ...payload }),
+    setGames: (state, { payload }) => ({ ...state, ...payload }),
   },
 });
 
-export const { peoples } = peopleSlice.actions;
-export default peopleSlice.reducer;
+export const { setGames } = gameSlice.actions;
+export default gameSlice.reducer;
 
 /* ----------------------------------- API ---------------------------------- */
-export const peopleApiSlice = apiSlice.injectEndpoints({
+export const gameApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    CreatePeople: builder.mutation({
+    UploadFile: builder.mutation({
       query: (data) => ({
-        url: "/people/create",
+        url: "/game/upload",
         method: "POST",
         credentials: "include",
         withCredentials: true,
@@ -46,15 +32,33 @@ export const peopleApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(_id, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(peoples({ ...data.data }));
         } catch (error) {
           dispatch(appError(error));
         }
       },
     }),
-    UpdatePeople: builder.mutation({
+    CrateGame: builder.mutation({
+      query: (data) => ({
+        url: `/game/create`,
+        method: "POST",
+        credentials: "include",
+        withCredentials: true,
+        crossorigin: true,
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        body: data,
+      }),
+      async onQueryStarted(_id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setGames({ ...data.data }));
+        } catch (error) {
+          dispatch(appError(error));
+        }
+      },
+    }),
+    UpdateGame: builder.mutation({
       query: ({ data, id }) => ({
-        url: `/people/update/${id}`,
+        url: `/game/update/${id}`,
         method: "PUT",
         credentials: "include",
         withCredentials: true,
@@ -65,15 +69,34 @@ export const peopleApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(_id, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(peoples({ ...data.data }));
+          dispatch(setGames({ ...data.data }));
         } catch (error) {
           dispatch(appError(error));
         }
       },
     }),
-    DeletePeople: builder.mutation({
+    ListGame: builder.mutation({
+      query: (data) => ({
+        url: `/game/list`,
+        method: "POST",
+        credentials: "include",
+        withCredentials: true,
+        crossorigin: true,
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        body: data,
+      }),
+      async onQueryStarted(_id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setGames({ gamelist: data.data }));
+        } catch (error) {
+          dispatch(appError(error));
+        }
+      },
+    }),
+    DelGame: builder.mutation({
       query: ({ data, id }) => ({
-        url: `/people/delete/${id}`,
+        url: `/game/delete/${id}`,
         method: "DELETE",
         credentials: "include",
         withCredentials: true,
@@ -84,77 +107,15 @@ export const peopleApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(_id, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(peoples({ ...data.data }));
         } catch (error) {
           dispatch(appError(error));
         }
       },
     }),
-    ListPeople: builder.mutation({
-      query: (data) => ({
-        url: `/people/list`,
-        method: "POST",
-        credentials: "include",
-        withCredentials: true,
-        crossorigin: true,
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-        body: data,
-      }),
-      async onQueryStarted(_id, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(peoples({ peopleList: data.data.data }));
-          dispatch(
-            peoples({
-              peoplePage: {
-                count: data.data.count,
-                currentPage: data.data.currentPage,
-                lastPage: data.data.lastPage,
-                nextPage: data.data.nextPage,
-                prevPage: data.data.nextPage,
-              },
-            })
-          );
-        } catch (error) {
-          dispatch(appError(error));
-        }
-      },
-    }),
-    RaffleListPeople: builder.mutation({
-      query: (data) => ({
-        url: `/people/raffle-list`,
-        method: "POST",
-        credentials: "include",
-        withCredentials: true,
-        crossorigin: true,
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-        body: data,
-      }),
-      async onQueryStarted(_id, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(peoples({ peopleList: data.data.data }));
-          dispatch(
-            peoples({
-              peoplePage: {
-                count: data.data.count,
-                currentPage: data.data.currentPage,
-                lastPage: data.data.lastPage,
-                nextPage: data.data.nextPage,
-                prevPage: data.data.nextPage,
-              },
-            })
-          );
-        } catch (error) {
-          dispatch(appError(error));
-        }
-      },
-    }),
-
-    setWinner: builder.mutation({
+    ViewGame: builder.mutation({
       query: ({ data, id }) => ({
-        url: `/people/set-won/${id}`,
-        method: "PUT",
+        url: `/game/view/${id}`,
+        method: "GET",
         credentials: "include",
         withCredentials: true,
         crossorigin: true,
@@ -164,18 +125,7 @@ export const peopleApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(_id, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(peoples({ peopleList: data.data.data }));
-          dispatch(
-            peoples({
-              peoplePage: {
-                count: data.data.count,
-                currentPage: data.data.currentPage,
-                lastPage: data.data.lastPage,
-                nextPage: data.data.nextPage,
-                prevPage: data.data.nextPage,
-              },
-            })
-          );
+          dispatch(setGames({ gameData: data.data }));
         } catch (error) {
           dispatch(appError(error));
         }
@@ -185,10 +135,10 @@ export const peopleApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useCreatePeopleMutation,
-  useUpdatePeopleMutation,
-  useDeletePeopleMutation,
-  useListPeopleMutation,
-  useSetWinnerMutation,
-  useRaffleListPeopleMutation,
-} = peopleApiSlice;
+  useUploadFileMutation,
+  useCrateGameMutation,
+  useListGameMutation,
+  useDelGameMutation,
+  useUpdateGameMutation,
+  useViewGameMutation,
+} = gameApiSlice;

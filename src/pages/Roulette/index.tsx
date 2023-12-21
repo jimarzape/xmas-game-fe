@@ -16,6 +16,7 @@ import rouletteProfile from "../../assets/images/profile-roulette.jpg";
 import {
   peoples,
   useListPeopleMutation,
+  useRaffleListPeopleMutation,
   useSetWinnerMutation,
 } from "../../store/people.slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +42,7 @@ const Roulette = () => {
   const [pickedNames, setPickedNames] = useState<peopleDataInt | null>(null);
   const [isPicking, setIsPicking] = useState(false);
   const [profileSrc, setProfileSrc] = React.useState<string | null>(null);
-  const [reqList, resList] = useListPeopleMutation();
+  const [reqList, resList] = useRaffleListPeopleMutation();
   const [reqCategoryList, resCategoryList] = useListCategoryMutation();
   const [reqWinner, resWinner] = useSetWinnerMutation();
   const [hasWinner, setHasWinner] = useState(false);
@@ -56,7 +57,8 @@ const Roulette = () => {
 
   const load = async (param: any) => {
     await reqList(param).then((res: any) => {
-      const data = res?.data?.data?.data;
+      // console.log("data", res?.data.data);
+      const data = res?.data?.data;
       setParticipan(data);
     });
   };

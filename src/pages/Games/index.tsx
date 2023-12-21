@@ -1,23 +1,40 @@
 import { Box, Container, Grid, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import BingoImg from "../../../src/assets/images/bingo.png";
+import { useListGameMutation } from "../../store/game.slice";
+import { useEffect, useState } from "react";
+import extractYouTubeID from "../../utils/ytIdExtractor";
 
 const GamesPage = () => {
-  const items = [
-    {
-      id: 1,
-      title: "Bingo",
-      imageUrl: BingoImg,
-      generateLink: () => "/games/bingo", // Example dynamic link generation function
-    },
-    {
-      id: 2,
-      title: "Item 2",
-      imageUrl: "https://placekitten.com/300/201",
-      generateLink: () => "/item/2", // Another example dynamic link generation function
-    },
-    // Add more items as needed
-  ];
+  const [reqList, resList] = useListGameMutation();
+  const [gameList, setGameList] = useState<any>([]);
+
+  useEffect(() => {
+    const items = [
+      {
+        id: 1,
+        title: "Bingo",
+        imageUrl: BingoImg,
+        generateLink: () => "/games/bingo", // Example dynamic link generation function
+      },
+    ];
+    reqList({})
+      .then((res: any) => {
+        console.log("res", res.data.data);
+        res.data.data.map((game: any) => {
+          const id = extractYouTubeID(game.link);
+          const imageUrl = `https://img.youtube.com/vi/${id}/0.jpg`;
+          items.push({
+            id: game.id,
+            title: game.title,
+            imageUrl,
+            generateLink: () => `/games/play/${game.id}`,
+          });
+        });
+        setGameList(items);
+      })
+      .catch((e) => {});
+  }, []);
 
   return (
     <Container style={{ width: "70%", margin: "auto" }}>
@@ -35,7 +52,7 @@ const GamesPage = () => {
 
         <Box sx={{ textAlign: "center", p: 4 }} width="100%">
           <Grid container spacing={2} justifyContent="center" sx={{ gap: 5 }}>
-            {items.map((item) => (
+            {gameList.map((item: any) => (
               <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
                 <Paper
                   elevation={3}

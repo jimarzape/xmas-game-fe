@@ -70,8 +70,10 @@ const BingoPlay = () => {
 
   useEffect(() => {
     const saveSelected = localStorage.getItem("selectedNumbers") as string;
-    const parse = JSON.parse(saveSelected) as BingoNumbers;
-    setSelectedNumbers(parse);
+    if (saveSelected) {
+      const parse = JSON.parse(saveSelected) as BingoNumbers;
+      setSelectedNumbers(parse);
+    }
   }, []);
 
   const selectRandomNumber = () => {
@@ -173,7 +175,12 @@ const BingoPlay = () => {
               {Object.keys(selectedNumbers).map((item: any, key: any) => {
                 return (
                   <Box key={`${key}-bingo`}>
-                    <Grid container spacing={2} rowGap={20}>
+                    <Grid
+                      container
+                      spacing={2}
+                      rowGap={20}
+                      // style={{ marginBottom: "5px", marginTop: "5px" }}
+                    >
                       <Grid item xs={2}>
                         <Box
                           style={{
@@ -185,6 +192,7 @@ const BingoPlay = () => {
                             width: "3em",
                             height: "3em",
                             borderRadius: "50%",
+                            fontWeight: "bold",
                           }}
                         >
                           {item}
@@ -226,7 +234,9 @@ const BingoPlay = () => {
                         )}
                       </Grid>
                     </Grid>
-                    <Divider />
+                    <Divider
+                      style={{ marginTop: "10px", marginBottom: "10px" }}
+                    />
                   </Box>
                 );
               })}

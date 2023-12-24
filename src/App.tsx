@@ -15,10 +15,12 @@ import GameAdmin from "./pages/Games/admin";
 import AddGame from "./pages/Games/admin/Add";
 import EditGame from "./pages/Games/admin/Edit";
 import GamePlay from "./pages/Games/play";
+import PrayerPage from "./pages/Prayer";
+import FamilyColor from "./pages/Color";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ overflowX: "hidden" }}>
       <BrowserRouter>
         <Header />
         <Container
@@ -44,6 +46,8 @@ function App() {
               <Route path="bingo" element={<BingoCard />} />
               <Route path="bingo/:id" element={<BingoPlay />} />
             </Route>
+            <Route path="/prayer" element={<PrayerPage />} />
+            <Route path="/family-color" element={<FamilyColor />} />
           </Routes>
         </Container>
       </BrowserRouter>

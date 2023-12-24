@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
+  Checkbox,
   Container,
   FormControl,
   Grid,
@@ -35,6 +36,7 @@ import {
   peoples,
   useDeletePeopleMutation,
   useListPeopleMutation,
+  useSetExcludedMutation,
 } from "../../store/people.slice";
 import AddPeopleModal from "./modals/Add";
 import { useListFamilyMutation } from "../../store/family.slice";
@@ -50,6 +52,7 @@ const People = () => {
   const [reqList, resList] = useListPeopleMutation();
   const [reqFamList, resFamList] = useListFamilyMutation();
   const [reqCategoryList, resCategoryList] = useListCategoryMutation();
+  const [reqExclude, resExclude] = useSetExcludedMutation();
   const { peopleList, peoplePage, peopleBtnPage } = useSelector(
     (state: any) => state.people
   );
@@ -157,6 +160,19 @@ const People = () => {
     reqList(param);
   };
 
+  const excludeChange = async (id: number, checked: boolean, key: number) => {
+    const list = [...peopleList];
+    list[key] = {
+      ...list[key],
+      exclude: checked,
+    };
+    disptach(peoples({ peopleList: list }));
+    const data = {
+      exclude: checked,
+    };
+    await reqExclude({ data, id });
+  };
+
   return (
     <Container style={{ width: "80%", margin: "auto", marginBottom: "5em" }}>
       <Box width="100%" mt="50px">
@@ -238,6 +254,7 @@ const People = () => {
                   <TableCell>Name</TableCell>
                   <TableCell>Family</TableCell>
                   <TableCell>Category</TableCell>
+                  <TableCell>Excluded to Game</TableCell>
                   <TableCell align="right">
                     <IconButton
                       aria-label="Add Category"
@@ -249,7 +266,7 @@ const People = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {peopleList?.map((item: peopleDataInt) => {
+                {peopleList?.map((item: peopleDataInt, key: number) => {
                   return (
                     <TableRow key={item?.id}>
                       <TableCell padding="none" align="center">
@@ -272,6 +289,16 @@ const People = () => {
                       </TableCell>
                       <TableCell>{item?.family?.name}</TableCell>
                       <TableCell>{item?.category?.name}</TableCell>
+                      <TableCell>
+                        <Checkbox
+                          // checked={checked}
+                          onChange={() =>
+                            excludeChange(item.id, !Boolean(item.exclude), key)
+                          }
+                          inputProps={{ "aria-label": "controlled" }}
+                          defaultChecked={item?.exclude}
+                        />
+                      </TableCell>
                       <TableCell align="right">
                         <IconButton
                           size="small"

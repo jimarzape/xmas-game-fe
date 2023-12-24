@@ -133,7 +133,8 @@ export const peopleApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(_id, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(peoples({ peopleList: data.data.data }));
+          console.log("data", data.data);
+          dispatch(peoples({ peopleList: data.data }));
           dispatch(
             peoples({
               peoplePage: {
@@ -181,6 +182,24 @@ export const peopleApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    setExcluded: builder.mutation({
+      query: ({ data, id }) => ({
+        url: `/people/set-excluded/${id}`,
+        method: "POST",
+        credentials: "include",
+        withCredentials: true,
+        crossorigin: true,
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        body: data,
+      }),
+      async onQueryStarted(_id, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+        } catch (error) {
+          dispatch(appError(error));
+        }
+      },
+    }),
   }),
 });
 
@@ -191,4 +210,5 @@ export const {
   useListPeopleMutation,
   useSetWinnerMutation,
   useRaffleListPeopleMutation,
+  useSetExcludedMutation,
 } = peopleApiSlice;

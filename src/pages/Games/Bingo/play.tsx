@@ -37,6 +37,8 @@ const BingoPlay = () => {
     Array.from({ length: 5 }, () => false)
   );
 
+  const [isPicking, setIsPicking] = useState(false);
+
   const [sourceData, SetSourceData] = useState<any>();
   const { id } = useParams();
   const source = BingoSource();
@@ -77,6 +79,7 @@ const BingoPlay = () => {
   }, []);
 
   const selectRandomNumber = () => {
+    setIsPicking(true);
     tickAudio.play();
 
     const allNumbers: { key: string; num: number }[] = Object.keys(
@@ -111,7 +114,7 @@ const BingoPlay = () => {
 
       const finalIndex = Math.floor(Math.random() * remainingNumbers.length);
       congratsAudio.play();
-
+      setIsPicking(false);
       const { key, num } = remainingNumbers[finalIndex];
 
       const selected = {
@@ -259,7 +262,11 @@ const BingoPlay = () => {
           >
             <Box>
               <Typography variant="h3">{displayNumber}</Typography>
-              <Button variant="contained" onClick={() => selectRandomNumber()}>
+              <Button
+                variant="contained"
+                onClick={() => selectRandomNumber()}
+                disabled={isPicking}
+              >
                 Pick number
               </Button>
             </Box>

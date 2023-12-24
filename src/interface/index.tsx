@@ -72,6 +72,7 @@ export interface peopleDataInt {
   avatar: string;
   isHbd?: boolean;
   isWon?: boolean;
+  exclude?: boolean;
 }
 
 export interface PeopleEditInt {

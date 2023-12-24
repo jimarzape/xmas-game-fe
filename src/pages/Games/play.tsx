@@ -5,6 +5,7 @@ import {
   FormControl,
   Grid,
   IconButton,
+  Paper,
   Stack,
   Typography,
 } from "@mui/material";
@@ -12,15 +13,44 @@ import { useViewGameMutation } from "../../store/game.slice";
 import { useSelector } from "react-redux";
 import PeopleCategory from "../Component/people";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import frameBg from "../../assets/images/frame-bg.png";
 import vsImg from "../../assets/images/vs.png";
-import { PlayCircleFilled, Settings, Shuffle } from "@mui/icons-material";
+import {
+  ArrowBack,
+  PlayCircleFilled,
+  Settings,
+  Shuffle,
+} from "@mui/icons-material";
+import GameSettings from "./modals/settings";
+import extractYouTubeID from "../../utils/ytIdExtractor";
+import YouTubeVideoPlayer from "./admin/YouTubeVideoPlayer";
+import defaultProfile from "../../assets/images/profile-roulette.jpg";
+import GameTeams from "./GameTeams";
+import GameSolo from "./GameSolo";
+const drumroll = require("../../assets/sounds/drum-roll.mp3") as string;
+
+type Participant = {
+  first_name: string;
+  avatar: string;
+};
+
+type TeamMember = {
+  name: string;
+  img: string;
+};
 
 const GamePlay = () => {
   const params = useParams();
   const { gameData } = useSelector((state: any) => state.games);
   const { peopleList } = useSelector((state: any) => state.people);
+  const [visiblePlay, setVisiblePlay] = useState(false);
+  const [isOpenSettings, setOpenSettings] = useState(false);
+  const [ytId, setYtId] = useState<string | null>(null);
+  const [availableParticipants, setavailableParticipants] = useState([]);
+  const [isSolo, SetIsSolo] = useState(false);
+  const [member, setMember] = useState(5);
+  const [isPicking, setIsPicking] = useState(false);
 
   const [reqView, resView] = useViewGameMutation();
 
@@ -28,8 +58,21 @@ const GamePlay = () => {
     reqView({ id: params.gameId });
   }, [params]);
 
-  console.log("peopleList", peopleList);
-  console.log("gameData", gameData);
+  useEffect(() => {
+    if (gameData) {
+      if (gameData?.link) {
+        setYtId(extractYouTubeID(gameData?.link));
+      }
+      if (gameData?.teams == 1) {
+        SetIsSolo(true);
+      }
+      setMember(gameData.participants);
+    }
+  }, [gameData]);
+
+  const fillTeamsRandomly = () => {
+    setIsPicking(true);
+  };
 
   return (
     <Container
@@ -68,37 +111,35 @@ const GamePlay = () => {
           right: 0,
         }}
       >
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={5}>
-            <Container style={{ height: "80vh", width: "100%" }}></Container>
-          </Grid>
-          <Grid item xs={2}>
-            <Container
-              style={{
-                height: "80vh",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <img src={vsImg} style={{ width: "100px" }} />
-            </Container>
-          </Grid>
-          <Grid item xs={5}>
-            <Container style={{ height: "80vh", width: "100%" }}></Container>
-          </Grid>
-        </Grid>
+        {visiblePlay ? (
+          <Container
+            style={{
+              height: "65vh",
+              width: "90%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "7vh",
+            }}
+          >
+            <Box>{ytId && <YouTubeVideoPlayer videoId={ytId} />}</Box>
+          </Container>
+        ) : isSolo ? (
+          <GameSolo
+            participants={Number(member)}
+            isClick={isPicking}
+            Clicked={(e) => setIsPicking(e)}
+          />
+        ) : (
+          <GameTeams
+            participants={Number(member)}
+            isClick={isPicking}
+            Clicked={(e) => setIsPicking(e)}
+          />
+        )}
       </Container>
-      {/* <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <PeopleCategory />
-        </Grid>
-        <Grid item xs={6}></Grid>
-      </Grid> */}
       <Container
         style={{
-          // background: "blue",
           width: "31em",
           height: "4em",
           position: "absolute",
@@ -116,29 +157,51 @@ const GamePlay = () => {
           justifyContent="center"
           color="white"
         >
-          <IconButton
-            aria-label="Shuffle"
-            style={{ color: "white" }}
-            size="large"
-          >
-            <Shuffle />
-          </IconButton>
-          <IconButton
-            aria-label="Preview"
-            style={{ color: "white" }}
-            size="large"
-          >
-            <PlayCircleFilled />
-          </IconButton>
-          <IconButton
-            aria-label="Preview"
-            style={{ color: "white" }}
-            size="large"
-          >
-            <Settings />
-          </IconButton>
+          {visiblePlay ? (
+            <IconButton
+              aria-label="Back"
+              style={{ color: "white" }}
+              size="large"
+              onClick={() => setVisiblePlay(false)}
+            >
+              <ArrowBack />
+            </IconButton>
+          ) : (
+            <>
+              <IconButton
+                aria-label="Shuffle"
+                style={{ color: "white" }}
+                size="large"
+                onClick={() => fillTeamsRandomly()}
+              >
+                <Shuffle />
+              </IconButton>
+              <IconButton
+                aria-label="Preview"
+                style={{ color: "white" }}
+                size="large"
+                onClick={() => setVisiblePlay(true)}
+              >
+                <PlayCircleFilled />
+              </IconButton>
+              <IconButton
+                aria-label="Preview"
+                style={{ color: "white" }}
+                size="large"
+                onClick={() => setOpenSettings(true)}
+              >
+                <Settings />
+              </IconButton>
+            </>
+          )}
         </Stack>
       </Container>
+      {isOpenSettings && (
+        <GameSettings
+          isOpen={isOpenSettings}
+          onClose={() => setOpenSettings(false)}
+        />
+      )}
     </Container>
   );
 };

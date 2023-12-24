@@ -21,6 +21,7 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { ModalInt } from "../../../interface";
+import PeopleCategory from "../../Component/people";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -56,7 +57,7 @@ const GameSettings = (param: ModalInt) => {
         open={isOpen}
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Add New Person
+          Participant Selection
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -70,7 +71,27 @@ const GameSettings = (param: ModalInt) => {
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent></DialogContent>
+        <DialogContent>
+          <PeopleCategory />
+          <Box gap="50" textAlign="right">
+            <Button
+              type="button"
+              variant="outlined"
+              sx={{ mt: 3, mb: 2, mr: 2 }}
+              onClick={onClose}
+            >
+              Close
+            </Button>
+            <Button
+              type="button"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={onClose}
+            >
+              Ok
+            </Button>
+          </Box>
+        </DialogContent>
       </BootstrapDialog>
     </React.Fragment>
   );

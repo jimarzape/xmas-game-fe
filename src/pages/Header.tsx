@@ -31,7 +31,8 @@ const pages = [
   { label: "Home", url: "/" },
   { label: "Roulette", url: "/roulette" },
   { label: "Games", url: "/games" },
-  { label: "Memories", url: "" },
+  { label: "Prayer", url: "/prayer" },
+  { label: "Family Color", url: "/family-color" },
 ];
 
 const settings = [
